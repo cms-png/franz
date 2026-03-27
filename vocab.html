@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vokabel-Drill — Franz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="nav-back">← Zurück</a>
+  <h1>Vokabel-Drill</h1>
+
+  <div id="loading" class="card">Lädt…</div>
+
+  <div id="no-due" class="card hidden">
+    <h2>Alles erledigt! 🎉</h2>
+    <p>Keine Vokabeln zur Wiederholung fällig. Komm morgen wieder!</p>
+    <a href="index.html" class="btn btn-secondary" style="margin-top:16px">Zurück</a>
+  </div>
+
+  <div id="drill-area" class="hidden">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <span id="queue-info" style="font-size:0.85rem;color:#6b7280"></span>
+      <span id="level-badge" class="badge badge-blue"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="card" style="text-align:center">
+      <button id="play-btn" class="btn btn-secondary" style="width:auto;padding:10px 20px;margin-bottom:8px">
+        🔊 Anhören
+      </button>
+      <p class="french-text" id="french-word"></p>
+      <p class="german-text" id="german-word"></p>
+      <p style="font-size:0.85rem;color:#9ca3af;margin-bottom:4px">Sprich das Wort nach:</p>
+      <button class="mic-btn" id="mic-btn">🎤</button>
+      <p id="mic-status" style="font-size:0.85rem;color:#6b7280;min-height:20px"></p>
+    </div>
+
+    <div id="feedback-area" class="hidden">
+      <div id="feedback-box" class="feedback-box"></div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button id="wrong-btn" class="btn btn-danger" style="flex:1">✗ Falsch</button>
+        <button id="correct-btn" class="btn btn-success" style="flex:1">✓ Richtig</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/srs.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/stt.js"></script>
+<script src="js/gemini.js"></script>
+<script>
+  let queue = [];
+  let currentIdx = 0;
+  let sessionTotal = 0;
+  let contentData = {};
+  let storageData = Storage.getAll();
+  const level = storageData.current_level || 'a1';
+  const apiKey = storageData.gemini_api_key;
+
+  async function init() {
+    const res = await fetch(`content/${level}.json`);
+    contentData = await res.json();
+
+    // Seed vocabulary into storage if not present
+    contentData.vocabulary.forEach(v => {
+      if (!storageData.vocabulary[v.french]) {
+        storageData.vocabulary[v.french] = {
+          level: level,
+          interval_index: 0, correct: 0, wrong: 0, next_review: null
+        };
+      }
+    });
+    Storage.saveAll(storageData);
+
+    // Build queue: due items first, then new items
+    let due = SRS.getDueItems(storageData.vocabulary, level);
+    if (due.length === 0) {
+      // Add new words not yet reviewed
+      const newWords = contentData.vocabulary
+        .filter(v => !storageData.vocabulary[v.french]?.next_review)
+        .slice(0, 10);
+      due = newWords.map(v => ({ word: v.french, ...storageData.vocabulary[v.french] }));
+    }
+    queue = due.slice(0, 20);
+    sessionTotal = queue.length;
+
+    document.getElementById('loading').classList.add('hidden');
+    if (queue.length === 0) {
+      document.getElementById('no-due').classList.remove('hidden');
+    } else {
+      document.getElementById('drill-area').classList.remove('hidden');
+      document.getElementById('level-badge').textContent = level.toUpperCase();
+      showCard();
+    }
+  }
+
+  function showCard() {
+    if (currentIdx >= queue.length) { showDone(); return; }
+    const item = queue[currentIdx];
+    const vocabEntry = contentData.vocabulary.find(v => v.french === item.word);
+    document.getElementById('french-word').textContent = item.word;
+    document.getElementById('german-word').textContent = vocabEntry?.german || '';
+    document.getElementById('mic-status').textContent = '';
+    document.getElementById('feedback-area').classList.add('hidden');
+    const pct = Math.round(currentIdx / sessionTotal * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('queue-info').textContent = `${currentIdx + 1} / ${sessionTotal}`;
+    TTS.speak(item.word, 'fr-FR');
+  }
+
+  document.getElementById('play-btn').addEventListener('click', () => {
+    const word = document.getElementById('french-word').textContent;
+    TTS.speak(word, 'fr-FR');
+  });
+
+  // IMPORTANT: STT must start synchronously inside this click handler (iOS requirement)
+  document.getElementById('mic-btn').addEventListener('click', function() {
+    const micBtn = this;
+    micBtn.classList.add('listening');
+    document.getElementById('mic-status').textContent = 'Höre zu…';
+    STT.listen(
+      async (transcript) => {
+        micBtn.classList.remove('listening');
+        document.getElementById('mic-status').textContent = `Erkannt: "${transcript}"`;
+        await getFeedback(transcript);
+      },
+      (err) => {
+        micBtn.classList.remove('listening');
+        document.getElementById('mic-status').textContent = err;
+      }
+    );
+  });
+
+  async function getFeedback(transcript) {
+    const word = queue[currentIdx].word;
+    const feedbackBox = document.getElementById('feedback-box');
+    const feedbackArea = document.getElementById('feedback-area');
+    feedbackBox.className = 'feedback-box feedback-info';
+    feedbackBox.innerHTML = '<span class="spinner"></span> Feedback wird geladen…';
+    feedbackArea.classList.remove('hidden');
+    try {
+      const text = await Gemini.vocabFeedback(word, transcript, apiKey);
+      feedbackBox.className = 'feedback-box feedback-info';
+      feedbackBox.textContent = text;
+    } catch(e) {
+      feedbackBox.className = 'feedback-box feedback-wrong';
+      feedbackBox.textContent = `Feedback-Fehler: ${e.message}`;
+    }
+  }
+
+  function markAndNext(correct) {
+    const item = queue[currentIdx];
+    storageData = Storage.getAll();
+    const existing = storageData.vocabulary[item.word] || { level };
+    const updated = SRS.updateItem(existing, correct);
+    storageData.vocabulary[item.word] = { ...updated, level };
+    Storage.saveAll(storageData);
+    currentIdx++;
+    showCard();
+  }
+
+  document.getElementById('correct-btn').addEventListener('click', () => markAndNext(true));
+  document.getElementById('wrong-btn').addEventListener('click', () => markAndNext(false));
+
+  function showDone() {
+    updateStreak();
+    document.getElementById('drill-area').innerHTML = `
+      <div class="card" style="text-align:center">
+        <h2>Session abgeschlossen! 🎉</h2>
+        <p>${sessionTotal} Vokabeln geübt.</p>
+        <a href="index.html" class="btn btn-primary" style="margin-top:16px">Zurück zum Menü</a>
+        <button onclick="location.reload()" class="btn btn-secondary">Nochmal</button>
+      </div>`;
+  }
+
+  function updateStreak() {
+    const today = new Date().toISOString().split('T')[0];
+    storageData = Storage.getAll();
+    const streak = storageData.streak;
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    if (streak.last_session === today) return;
+    streak.current = streak.last_session === yesterday ? streak.current + 1 : 1;
+    streak.last_session = today;
+    storageData.streak = streak;
+    Storage.saveAll(storageData);
+  }
+
+  init();
+</script>
+</body>
+</html>
