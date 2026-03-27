@@ -1,0 +1,99 @@
+{
+  "level": "a2",
+  "vocabulary": [
+    {"id":"a2_v001","french":"acheter","german":"kaufen","category":"verbs"},
+    {"id":"a2_v002","french":"vendre","german":"verkaufen","category":"verbs"},
+    {"id":"a2_v003","french":"prendre","german":"nehmen","category":"verbs"},
+    {"id":"a2_v004","french":"donner","german":"geben","category":"verbs"},
+    {"id":"a2_v005","french":"chercher","german":"suchen","category":"verbs"},
+    {"id":"a2_v006","french":"trouver","german":"finden","category":"verbs"},
+    {"id":"a2_v007","french":"connaître","german":"kennen","category":"verbs"},
+    {"id":"a2_v008","french":"savoir","german":"wissen / können","category":"verbs"},
+    {"id":"a2_v009","french":"vouloir","german":"wollen","category":"verbs"},
+    {"id":"a2_v010","french":"pouvoir","german":"können (dürfen)","category":"verbs"},
+    {"id":"a2_v011","french":"devoir","german":"müssen","category":"verbs"},
+    {"id":"a2_v012","french":"partir","german":"abfahren / weggehen","category":"verbs"},
+    {"id":"a2_v013","french":"arriver","german":"ankommen","category":"verbs"},
+    {"id":"a2_v014","french":"rentrer","german":"zurückkehren","category":"verbs"},
+    {"id":"a2_v015","french":"restaurant","german":"Restaurant","category":"places"},
+    {"id":"a2_v016","french":"hôtel","german":"Hotel","category":"places"},
+    {"id":"a2_v017","french":"gare","german":"Bahnhof","category":"places"},
+    {"id":"a2_v018","french":"aéroport","german":"Flughafen","category":"places"},
+    {"id":"a2_v019","french":"supermarché","german":"Supermarkt","category":"places"},
+    {"id":"a2_v020","french":"pharmacie","german":"Apotheke","category":"places"},
+    {"id":"a2_v021","french":"hôpital","german":"Krankenhaus","category":"places"},
+    {"id":"a2_v022","french":"banque","german":"Bank","category":"places"},
+    {"id":"a2_v023","french":"heure","german":"Stunde / Uhr","category":"time"},
+    {"id":"a2_v024","french":"minute","german":"Minute","category":"time"},
+    {"id":"a2_v025","french":"semaine","german":"Woche","category":"time"},
+    {"id":"a2_v026","french":"mois","german":"Monat","category":"time"},
+    {"id":"a2_v027","french":"année","german":"Jahr","category":"time"},
+    {"id":"a2_v028","french":"billet","german":"Fahrkarte / Ticket","category":"travel"},
+    {"id":"a2_v029","french":"chambre","german":"Zimmer","category":"hotel"},
+    {"id":"a2_v030","french":"réservation","german":"Reservierung","category":"hotel"},
+    {"id":"a2_v031","french":"addition","german":"Rechnung (im Restaurant)","category":"restaurant"},
+    {"id":"a2_v032","french":"entrée","german":"Vorspeise","category":"food"},
+    {"id":"a2_v033","french":"plat principal","german":"Hauptgericht","category":"food"},
+    {"id":"a2_v034","french":"dessert","german":"Nachspeise","category":"food"},
+    {"id":"a2_v035","french":"content","german":"froh / zufrieden","category":"adjectives"},
+    {"id":"a2_v036","french":"fatigué","german":"müde","category":"adjectives"},
+    {"id":"a2_v037","french":"malade","german":"krank","category":"adjectives"},
+    {"id":"a2_v038","french":"libre","german":"frei / verfügbar","category":"adjectives"},
+    {"id":"a2_v039","french":"occupé","german":"beschäftigt / besetzt","category":"adjectives"},
+    {"id":"a2_v040","french":"gauche","german":"links","category":"directions"},
+    {"id":"a2_v041","french":"droite","german":"rechts","category":"directions"},
+    {"id":"a2_v042","french":"tout droit","german":"geradeaus","category":"directions"},
+    {"id":"a2_v043","french":"près de","german":"in der Nähe von","category":"directions"},
+    {"id":"a2_v044","french":"loin de","german":"weit von","category":"directions"},
+    {"id":"a2_v045","french":"environ","german":"ungefähr","category":"basics"},
+    {"id":"a2_v046","french":"trop","german":"zu viel / zu sehr","category":"basics"},
+    {"id":"a2_v047","french":"assez","german":"genug / ziemlich","category":"basics"},
+    {"id":"a2_v048","french":"très","german":"sehr","category":"basics"},
+    {"id":"a2_v049","french":"beaucoup","german":"viel","category":"basics"},
+    {"id":"a2_v050","french":"peu","german":"wenig","category":"basics"}
+  ],
+  "sentences": [
+    {"id":"a2_s001","french":"Je voudrais réserver une table pour deux personnes.","german":"Ich möchte einen Tisch für zwei Personen reservieren.","category":"restaurant"},
+    {"id":"a2_s002","french":"L'addition, s'il vous plaît.","german":"Die Rechnung, bitte.","category":"restaurant"},
+    {"id":"a2_s003","french":"Je cherche l'hôtel Lumière.","german":"Ich suche das Hotel Lumière.","category":"directions"},
+    {"id":"a2_s004","french":"Tournez à gauche au carrefour.","german":"Biegen Sie an der Kreuzung links ab.","category":"directions"},
+    {"id":"a2_s005","french":"Je suis arrivé hier soir.","german":"Ich bin gestern Abend angekommen.","category":"travel"},
+    {"id":"a2_s006","french":"Avez-vous une chambre libre ?","german":"Haben Sie ein freies Zimmer?","category":"hotel"},
+    {"id":"a2_s007","french":"Je voudrais un billet aller-retour pour Lyon.","german":"Ich hätte gerne eine Hin- und Rückfahrkarte nach Lyon.","category":"travel"},
+    {"id":"a2_s008","french":"Où est la sortie la plus proche ?","german":"Wo ist der nächste Ausgang?","category":"directions"},
+    {"id":"a2_s009","french":"À quelle heure part le prochain train ?","german":"Um wie viel Uhr fährt der nächste Zug ab?","category":"travel"},
+    {"id":"a2_s010","french":"Je suis un peu fatigué aujourd'hui.","german":"Ich bin heute ein bisschen müde.","category":"everyday"}
+  ],
+  "placement_questions": [
+    {
+      "id":"a2_p001","level":"a2",
+      "question":"Was bedeutet 'Je voudrais réserver une table' ?",
+      "options":["Ich möchte zahlen","Ich möchte einen Tisch reservieren","Ich suche einen Tisch","Ich habe reserviert"],
+      "correct":1
+    },
+    {
+      "id":"a2_p002","level":"a2",
+      "question":"Wie sagt man 'links' auf Französisch?",
+      "options":["droite","tout droit","gauche","loin"],
+      "correct":2
+    },
+    {
+      "id":"a2_p003","level":"a2",
+      "question":"Was bedeutet 'fatigué'?",
+      "options":["hungrig","müde","krank","fröhlich"],
+      "correct":1
+    },
+    {
+      "id":"a2_p004","level":"a2",
+      "question":"Wie übersetzt man 'Haben Sie ein freies Zimmer?'",
+      "options":["Avez-vous une chambre libre ?","Où est la chambre ?","Je voudrais une chambre.","La chambre est libre."],
+      "correct":0
+    },
+    {
+      "id":"a2_p005","level":"a2",
+      "question":"Was bedeutet 'devoir'?",
+      "options":["wollen","können","müssen","wissen"],
+      "correct":2
+    }
+  ]
+}

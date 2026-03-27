@@ -1,0 +1,82 @@
+{
+  "level": "b1",
+  "vocabulary": [
+    {"id":"b1_v001","french":"malgré","german":"trotz","category":"prepositions"},
+    {"id":"b1_v002","french":"pourtant","german":"trotzdem / dennoch","category":"connectors"},
+    {"id":"b1_v003","french":"cependant","german":"jedoch / allerdings","category":"connectors"},
+    {"id":"b1_v004","french":"ainsi","german":"so / auf diese Weise","category":"connectors"},
+    {"id":"b1_v005","french":"donc","german":"also / deshalb","category":"connectors"},
+    {"id":"b1_v006","french":"d'ailleurs","german":"übrigens / außerdem","category":"connectors"},
+    {"id":"b1_v007","french":"en fait","german":"eigentlich / tatsächlich","category":"connectors"},
+    {"id":"b1_v008","french":"par contre","german":"hingegen / andererseits","category":"connectors"},
+    {"id":"b1_v009","french":"se souvenir","german":"sich erinnern","category":"verbs"},
+    {"id":"b1_v010","french":"s'inquiéter","german":"sich sorgen","category":"verbs"},
+    {"id":"b1_v011","french":"se plaindre","german":"sich beschweren","category":"verbs"},
+    {"id":"b1_v012","french":"proposer","german":"vorschlagen","category":"verbs"},
+    {"id":"b1_v013","french":"expliquer","german":"erklären","category":"verbs"},
+    {"id":"b1_v014","french":"réussir","german":"gelingen / schaffen","category":"verbs"},
+    {"id":"b1_v015","french":"échouer","german":"scheitern / durchfallen","category":"verbs"},
+    {"id":"b1_v016","french":"améliorer","german":"verbessern","category":"verbs"},
+    {"id":"b1_v017","french":"dépendre","german":"abhängen","category":"verbs"},
+    {"id":"b1_v018","french":"appartenir","german":"gehören / angehören","category":"verbs"},
+    {"id":"b1_v019","french":"chômage","german":"Arbeitslosigkeit","category":"society"},
+    {"id":"b1_v020","french":"syndicat","german":"Gewerkschaft","category":"society"},
+    {"id":"b1_v021","french":"grève","german":"Streik","category":"society"},
+    {"id":"b1_v022","french":"bénévole","german":"ehrenamtlich / Freiwilliger","category":"society"},
+    {"id":"b1_v023","french":"quotidien","german":"täglich / Alltag","category":"adjectives"},
+    {"id":"b1_v024","french":"actuel","german":"aktuell / gegenwärtig","category":"adjectives"},
+    {"id":"b1_v025","french":"ancien","german":"ehemalig / alt","category":"adjectives"},
+    {"id":"b1_v026","french":"grave","german":"ernst / schwerwiegend","category":"adjectives"},
+    {"id":"b1_v027","french":"bien que","german":"obwohl (+ Subjonctif)","category":"conjunctions"},
+    {"id":"b1_v028","french":"afin que","german":"damit (+ Subjonctif)","category":"conjunctions"},
+    {"id":"b1_v029","french":"à condition que","german":"vorausgesetzt dass (+ Subjonctif)","category":"conjunctions"},
+    {"id":"b1_v030","french":"se rendre compte","german":"sich bewusst werden / merken","category":"expressions"},
+    {"id":"b1_v031","french":"avoir du mal à","german":"Schwierigkeiten haben zu","category":"expressions"},
+    {"id":"b1_v032","french":"être en train de","german":"gerade dabei sein zu","category":"expressions"},
+    {"id":"b1_v033","french":"il s'agit de","german":"es geht um / es handelt sich um","category":"expressions"},
+    {"id":"b1_v034","french":"à la fois","german":"gleichzeitig / zugleich","category":"expressions"},
+    {"id":"b1_v035","french":"avoir lieu","german":"stattfinden","category":"expressions"}
+  ],
+  "sentences": [
+    {"id":"b1_s001","french":"Bien qu'il soit fatigué, il continue à travailler.","german":"Obwohl er müde ist, arbeitet er weiter.","category":"grammar"},
+    {"id":"b1_s002","french":"Je me souviens de notre première rencontre.","german":"Ich erinnere mich an unser erstes Treffen.","category":"everyday"},
+    {"id":"b1_s003","french":"Il faudrait que tu te reposes davantage.","german":"Du solltest dich mehr ausruhen.","category":"advice"},
+    {"id":"b1_s004","french":"J'ai du mal à comprendre son accent.","german":"Ich habe Schwierigkeiten, seinen Akzent zu verstehen.","category":"communication"},
+    {"id":"b1_s005","french":"Elle est en train de préparer le dîner.","german":"Sie ist gerade dabei, das Abendessen zuzubereiten.","category":"everyday"},
+    {"id":"b1_s006","french":"Malgré les difficultés, il a réussi son examen.","german":"Trotz der Schwierigkeiten hat er seine Prüfung bestanden.","category":"everyday"},
+    {"id":"b1_s007","french":"Cela dépend de la situation.","german":"Das hängt von der Situation ab.","category":"everyday"},
+    {"id":"b1_s008","french":"Je me rends compte que j'ai fait une erreur.","german":"Ich merke, dass ich einen Fehler gemacht habe.","category":"everyday"}
+  ],
+  "placement_questions": [
+    {
+      "id":"b1_p001","level":"b1",
+      "question":"Was bedeutet 'malgré' ?",
+      "options":["wegen","trotz","dank","während"],
+      "correct":1
+    },
+    {
+      "id":"b1_p002","level":"b1",
+      "question":"Was bedeutet 'avoir du mal à faire quelque chose' ?",
+      "options":["etwas leicht finden","Schwierigkeiten haben etwas zu tun","etwas gut können","etwas gerne tun"],
+      "correct":1
+    },
+    {
+      "id":"b1_p003","level":"b1",
+      "question":"'Bien que' wird mit welchem Modus verwendet?",
+      "options":["Indicatif","Conditionnel","Subjonctif","Impératif"],
+      "correct":2
+    },
+    {
+      "id":"b1_p004","level":"b1",
+      "question":"Was bedeutet 'il s'agit de' ?",
+      "options":["er kommt an","es geht um","er fragt nach","es ist fertig"],
+      "correct":1
+    },
+    {
+      "id":"b1_p005","level":"b1",
+      "question":"Was bedeutet 'pourtant' ?",
+      "options":["deshalb","trotzdem","obwohl","damit"],
+      "correct":1
+    }
+  ]
+}

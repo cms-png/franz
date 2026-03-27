@@ -1,0 +1,64 @@
+{
+  "level": "c1",
+  "vocabulary": [
+    {"id":"c1_v001","french":"à l'instar de","german":"nach dem Vorbild von / wie","category":"expressions"},
+    {"id":"c1_v002","french":"au demeurant","german":"übrigens / im Übrigen","category":"connectors"},
+    {"id":"c1_v003","french":"nonobstant","german":"ungeachtet / trotz (formal)","category":"prepositions"},
+    {"id":"c1_v004","french":"corroborer","german":"bestätigen / bekräftigen","category":"verbs"},
+    {"id":"c1_v005","french":"étayer","german":"untermauern / stützen","category":"verbs"},
+    {"id":"c1_v006","french":"infirmer","german":"widerlegen / entkräften","category":"verbs"},
+    {"id":"c1_v007","french":"déceler","german":"aufspüren / aufdecken","category":"verbs"},
+    {"id":"c1_v008","french":"amalgame","german":"Vermischung / unzulässige Gleichsetzung","category":"argumentation"},
+    {"id":"c1_v009","french":"présupposé","german":"Voraussetzung / Prämisse","category":"argumentation"},
+    {"id":"c1_v010","french":"paradoxe","german":"Paradoxon / Widerspruch","category":"argumentation"},
+    {"id":"c1_v011","french":"fouler aux pieds","german":"mit Füßen treten","category":"idioms"},
+    {"id":"c1_v012","french":"tourner autour du pot","german":"um den heißen Brei reden","category":"idioms"},
+    {"id":"c1_v013","french":"avoir le cafard","german":"deprimiert sein / Trübsal blasen","category":"idioms"},
+    {"id":"c1_v014","french":"il va de soi que","german":"es versteht sich von selbst dass","category":"expressions"},
+    {"id":"c1_v015","french":"tant bien que mal","german":"schlecht und recht / irgendwie","category":"expressions"},
+    {"id":"c1_v016","french":"s'avérer","german":"sich herausstellen / sich erweisen","category":"verbs"},
+    {"id":"c1_v017","french":"préconiser","german":"empfehlen / befürworten","category":"verbs"},
+    {"id":"c1_v018","french":"pallier","german":"ausgleichen / beheben","category":"verbs"},
+    {"id":"c1_v019","french":"engouement","german":"Begeisterung / Schwärmerei","category":"abstract"},
+    {"id":"c1_v020","french":"fléau","german":"Geißel / Plage","category":"abstract"}
+  ],
+  "sentences": [
+    {"id":"c1_s001","french":"Il va de soi que cette décision aura des répercussions considérables.","german":"Es versteht sich von selbst, dass diese Entscheidung erhebliche Auswirkungen haben wird.","category":"argumentation"},
+    {"id":"c1_s002","french":"Ces données corroborent l'hypothèse émise par les chercheurs.","german":"Diese Daten bekräftigen die von den Forschern aufgestellte Hypothese.","category":"academic"},
+    {"id":"c1_s003","french":"Il ne faut pas faire d'amalgame entre ces deux concepts.","german":"Man darf diese beiden Konzepte nicht unzulässigerweise gleichsetzen.","category":"argumentation"},
+    {"id":"c1_s004","french":"À l'instar de nombreux pays européens, la France a révisé sa politique énergétique.","german":"Nach dem Vorbild vieler europäischer Länder hat Frankreich seine Energiepolitik überarbeitet.","category":"society"},
+    {"id":"c1_s005","french":"Elle a réussi à s'adapter, tant bien que mal, à cette nouvelle situation.","german":"Sie hat es geschafft, sich schlecht und recht an diese neue Situation anzupassen.","category":"everyday"}
+  ],
+  "placement_questions": [
+    {
+      "id":"c1_p001","level":"c1",
+      "question":"Was bedeutet 'étayer une thèse' ?",
+      "options":["eine These widerlegen","eine These untermauern","eine These vorstellen","eine These zusammenfassen"],
+      "correct":1
+    },
+    {
+      "id":"c1_p002","level":"c1",
+      "question":"Was bedeutet 'avoir le cafard' ?",
+      "options":["einen Fehler machen","deprimiert sein","Angst haben","laut lachen"],
+      "correct":1
+    },
+    {
+      "id":"c1_p003","level":"c1",
+      "question":"Was bedeutet 'tourner autour du pot' ?",
+      "options":["kochen","um den heißen Brei reden","ein Problem lösen","eine Geschichte erzählen"],
+      "correct":1
+    },
+    {
+      "id":"c1_p004","level":"c1",
+      "question":"Was bedeutet 'nonobstant' ?",
+      "options":["infolgedessen","ungeachtet / trotz","gleichwohl","sofern"],
+      "correct":1
+    },
+    {
+      "id":"c1_p005","level":"c1",
+      "question":"Was bedeutet 'faire un amalgame' ?",
+      "options":["etwas analysieren","Dinge unzulässig gleichsetzen","Argumente abwägen","ein Fazit ziehen"],
+      "correct":1
+    }
+  ]
+}

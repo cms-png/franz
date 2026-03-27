@@ -1,0 +1,70 @@
+{
+  "level": "b2",
+  "vocabulary": [
+    {"id":"b2_v001","french":"néanmoins","german":"nichtsdestoweniger","category":"connectors"},
+    {"id":"b2_v002","french":"en revanche","german":"hingegen / dagegen","category":"connectors"},
+    {"id":"b2_v003","french":"quant à","german":"was … betrifft / hinsichtlich","category":"connectors"},
+    {"id":"b2_v004","french":"par ailleurs","german":"außerdem / andererseits","category":"connectors"},
+    {"id":"b2_v005","french":"en outre","german":"außerdem / darüber hinaus","category":"connectors"},
+    {"id":"b2_v006","french":"nuancer","german":"differenzieren / nuancieren","category":"verbs"},
+    {"id":"b2_v007","french":"souligner","german":"unterstreichen / betonen","category":"verbs"},
+    {"id":"b2_v008","french":"aborder","german":"ansprechen / angehen","category":"verbs"},
+    {"id":"b2_v009","french":"mettre en évidence","german":"hervorheben / aufzeigen","category":"verbs"},
+    {"id":"b2_v010","french":"remettre en question","german":"in Frage stellen","category":"expressions"},
+    {"id":"b2_v011","french":"prendre en compte","german":"berücksichtigen","category":"expressions"},
+    {"id":"b2_v012","french":"à cet égard","german":"in dieser Hinsicht","category":"expressions"},
+    {"id":"b2_v013","french":"il convient de","german":"es empfiehlt sich / man sollte","category":"expressions"},
+    {"id":"b2_v014","french":"voire","german":"ja sogar / wenn nicht gar","category":"connectors"},
+    {"id":"b2_v015","french":"désormais","german":"fortan / von nun an","category":"time"},
+    {"id":"b2_v016","french":"dorénavant","german":"künftig / in Zukunft","category":"time"},
+    {"id":"b2_v017","french":"jadis","german":"einst / früher","category":"time"},
+    {"id":"b2_v018","french":"croissance","german":"Wachstum","category":"economy"},
+    {"id":"b2_v019","french":"mondialisation","german":"Globalisierung","category":"society"},
+    {"id":"b2_v020","french":"développement durable","german":"nachhaltige Entwicklung","category":"environment"},
+    {"id":"b2_v021","french":"inégalité","german":"Ungleichheit","category":"society"},
+    {"id":"b2_v022","french":"biais","german":"Voreingenommenheit / Verzerrung","category":"abstract"},
+    {"id":"b2_v023","french":"enjeu","german":"Einsatz / Herausforderung / Kernfrage","category":"abstract"},
+    {"id":"b2_v024","french":"lacune","german":"Lücke / Defizit","category":"abstract"},
+    {"id":"b2_v025","french":"outil","german":"Werkzeug / Instrument","category":"abstract"}
+  ],
+  "sentences": [
+    {"id":"b2_s001","french":"Il convient de nuancer cette affirmation.","german":"Man sollte diese Behauptung differenzieren.","category":"argumentation"},
+    {"id":"b2_s002","french":"En revanche, les données récentes montrent une tendance inverse.","german":"Dagegen zeigen die aktuellen Daten einen gegenteiligen Trend.","category":"argumentation"},
+    {"id":"b2_s003","french":"Il faut prendre en compte les inégalités sociales.","german":"Man muss die sozialen Ungleichheiten berücksichtigen.","category":"society"},
+    {"id":"b2_s004","french":"Cette politique remet en question les acquis sociaux.","german":"Diese Politik stellt die sozialen Errungenschaften in Frage.","category":"politics"},
+    {"id":"b2_s005","french":"Quant à la mondialisation, elle présente à la fois des avantages et des inconvénients.","german":"Was die Globalisierung betrifft, sie hat sowohl Vor- als auch Nachteile.","category":"society"},
+    {"id":"b2_s006","french":"Il souligne que les lacunes du système doivent être comblées.","german":"Er betont, dass die Lücken des Systems geschlossen werden müssen.","category":"argumentation"}
+  ],
+  "placement_questions": [
+    {
+      "id":"b2_p001","level":"b2",
+      "question":"Was bedeutet 'en revanche' ?",
+      "options":["außerdem","hingegen / dagegen","deshalb","trotzdem"],
+      "correct":1
+    },
+    {
+      "id":"b2_p002","level":"b2",
+      "question":"Was bedeutet 'enjeu' ?",
+      "options":["Vorteil","Kernfrage / Herausforderung","Ergebnis","Entwicklung"],
+      "correct":1
+    },
+    {
+      "id":"b2_p003","level":"b2",
+      "question":"Was bedeutet 'prendre en compte' ?",
+      "options":["in Frage stellen","berücksichtigen","betonen","ansprechen"],
+      "correct":1
+    },
+    {
+      "id":"b2_p004","level":"b2",
+      "question":"Was bedeutet 'voire' ?",
+      "options":["oder auch","ja sogar","obwohl","indem"],
+      "correct":1
+    },
+    {
+      "id":"b2_p005","level":"b2",
+      "question":"Was bedeutet 'désormais' ?",
+      "options":["früher","von nun an","manchmal","selten"],
+      "correct":1
+    }
+  ]
+}
