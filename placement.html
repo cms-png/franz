@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Einstufungstest — Franz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="nav-back">← Zurück</a>
+  <h1>Einstufungstest</h1>
+  <p style="margin-bottom:24px">Beantworte die Fragen um dein Startniveau zu ermitteln. Kein Stress — rate ruhig!</p>
+
+  <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  <p id="question-counter" style="font-size:0.85rem; color:#6b7280; margin-bottom:16px"></p>
+
+  <div id="question-area" class="card">
+    <p id="question-level-badge" class="badge badge-blue" style="margin-bottom:12px"></p>
+    <p id="question-text" style="font-size:1.1rem; font-weight:600; margin-bottom:20px"></p>
+    <div id="options-area"></div>
+    <div id="question-feedback" class="feedback-box hidden" style="margin-top:0"></div>
+    <button id="next-btn" class="btn btn-primary hidden" style="margin-top:16px">Weiter →</button>
+  </div>
+
+  <div id="result-area" class="card hidden">
+    <h2>Dein Ergebnis</h2>
+    <p id="result-text" style="margin-bottom:16px"></p>
+    <div id="result-details" style="margin-bottom:24px"></div>
+    <a href="index.html" class="btn btn-primary">Zum Lernbereich →</a>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/srs.js"></script>
+<script>
+  const LEVELS = ['a1','a2','b1','b2','c1'];
+  const LEVEL_LABELS = {a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1'};
+  let allQuestions = [];
+  let current = 0;
+  let scores = {a1:0,a2:0,b1:0,b2:0,c1:0};
+  let totals = {a1:0,a2:0,b1:0,b2:0,c1:0};
+  let answered = false;
+
+  async function loadQuestions() {
+    for (const lvl of LEVELS) {
+      const res = await fetch(`content/${lvl}.json`);
+      const data = await res.json();
+      allQuestions.push(...data.placement_questions);
+      totals[lvl] = data.placement_questions.length;
+    }
+    showQuestion();
+  }
+
+  function showQuestion() {
+    if (current >= allQuestions.length) { showResult(); return; }
+    const q = allQuestions[current];
+    answered = false;
+    const pct = Math.round(current / allQuestions.length * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('question-counter').textContent = `Frage ${current + 1} von ${allQuestions.length}`;
+    document.getElementById('question-level-badge').textContent = LEVEL_LABELS[q.level];
+    document.getElementById('question-text').textContent = q.question;
+    document.getElementById('question-feedback').classList.add('hidden');
+    document.getElementById('next-btn').classList.add('hidden');
+
+    const area = document.getElementById('options-area');
+    area.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-option';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => selectAnswer(i, q, btn));
+      area.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(idx, q, btn) {
+    if (answered) return;
+    answered = true;
+    const correct = idx === q.correct;
+    if (correct) scores[q.level]++;
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+      document.querySelectorAll('.choice-option')[q.correct].classList.add('correct');
+    }
+    document.querySelectorAll('.choice-option').forEach(b => b.style.pointerEvents = 'none');
+
+    const fb = document.getElementById('question-feedback');
+    fb.className = `feedback-box ${correct ? 'feedback-correct' : 'feedback-wrong'}`;
+    fb.textContent = correct ? '✓ Richtig!' : `✗ Die richtige Antwort war: ${q.options[q.correct]}`;
+    fb.classList.remove('hidden');
+    document.getElementById('next-btn').classList.remove('hidden');
+  }
+
+  document.getElementById('next-btn').addEventListener('click', () => {
+    current++;
+    showQuestion();
+  });
+
+  function showResult() {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('result-area').classList.remove('hidden');
+    document.getElementById('progress-fill').style.width = '100%';
+
+    // Determine level: highest level with ≥70% correct
+    let recommendedLevel = 'a1';
+    for (const lvl of LEVELS) {
+      if (totals[lvl] > 0 && scores[lvl] / totals[lvl] >= 0.7) {
+        recommendedLevel = lvl;
+      }
+    }
+
+    document.getElementById('result-text').innerHTML =
+      `Empfohlenes Startniveau: <strong>${LEVEL_LABELS[recommendedLevel]}</strong>`;
+
+    let details = '';
+    for (const lvl of LEVELS) {
+      const pct = totals[lvl] > 0 ? Math.round(scores[lvl] / totals[lvl] * 100) : 0;
+      details += `<div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span>${LEVEL_LABELS[lvl]}</span>
+        <span>${scores[lvl]}/${totals[lvl]} (${pct}%)</span>
+      </div>`;
+    }
+    document.getElementById('result-details').innerHTML = details;
+
+    // Save results
+    const storageData = Storage.getAll();
+    storageData.placement_completed = true;
+    storageData.current_level = recommendedLevel;
+    const idx = LEVELS.indexOf(recommendedLevel);
+    storageData.unlocked_levels = LEVELS.slice(0, idx + 1);
+    Storage.saveAll(storageData);
+  }
+
+  loadQuestions();
+</script>
+</body>
+</html>
