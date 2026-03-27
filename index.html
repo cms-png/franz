@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Franz">
+  <title>Franz — Französisch lernen</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+
+  <!-- API Key Setup (shown if no key stored) -->
+  <div id="setup-screen">
+    <h1>🇫🇷 Franz</h1>
+    <p style="margin-bottom:24px">Dein persönlicher Französisch-Trainer. Bitte gib deinen Gemini API-Key ein um zu starten.</p>
+    <div class="card">
+      <h2>API-Key einrichten</h2>
+      <p style="margin-bottom:16px; font-size:0.9rem;">Du bekommst deinen kostenlosen Key auf <strong>aistudio.google.com</strong> → "Get API key".</p>
+      <input type="password" id="api-key-input" class="input" placeholder="AIzaSy..." style="margin-bottom:12px">
+      <div id="key-error" class="feedback-box feedback-wrong hidden"></div>
+      <button id="save-key-btn" class="btn btn-primary">
+        <span id="key-btn-text">Key speichern &amp; testen</span>
+        <span id="key-spinner" class="spinner hidden"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Home Screen (shown once API key is set) -->
+  <div id="home-screen" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+      <h1>🇫🇷 Franz</h1>
+      <div class="streak" id="streak-display">🔥 0 Tage</div>
+    </div>
+
+    <div id="placement-banner" class="card hidden">
+      <h2>Wo stehst du?</h2>
+      <p style="margin-bottom:16px">Mach den kurzen Einstufungstest um dein Startniveau zu bestimmen.</p>
+      <a href="placement.html" class="btn btn-primary">Einstufungstest starten →</a>
+    </div>
+
+    <div id="level-section">
+      <h2>Dein Level</h2>
+      <div class="level-grid" id="level-grid"></div>
+    </div>
+
+    <div id="due-banner" class="card hidden">
+      <p id="due-text"></p>
+      <a href="vocab.html" class="btn btn-primary" style="margin-top:12px">Jetzt lernen →</a>
+    </div>
+
+    <h2 style="margin-top:8px">Trainieren</h2>
+    <a href="vocab.html" class="btn btn-secondary">📖 Vokabel-Drill</a>
+    <a href="sentences.html" class="btn btn-secondary">💬 Satz-Training</a>
+
+    <button id="reset-btn" class="btn btn-secondary" style="margin-top:32px; font-size:0.8rem; color:#9ca3af">
+      ⚙️ API-Key ändern / Fortschritt zurücksetzen
+    </button>
+  </div>
+
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/srs.js"></script>
+<script>
+  let data = Storage.getAll();
+
+  function init() {
+    if (!data.gemini_api_key) {
+      document.getElementById('setup-screen').classList.remove('hidden');
+    } else {
+      showHome();
+    }
+  }
+
+  function showHome() {
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('home-screen').classList.remove('hidden');
+    renderStreak();
+    renderLevels();
+    renderDueBanner();
+    if (!data.placement_completed) {
+      document.getElementById('placement-banner').classList.remove('hidden');
+    }
+  }
+
+  function renderStreak() {
+    const s = data.streak;
+    document.getElementById('streak-display').textContent = `🔥 ${s.current} Tag${s.current !== 1 ? 'e' : ''}`;
+  }
+
+  function renderLevels() {
+    const levels = ['a1','a2','b1','b2','c1'];
+    const labels = {a1:'A1',a2:'A2',b1:'B1',b2:'B2',c1:'C1'};
+    const grid = document.getElementById('level-grid');
+    grid.innerHTML = '';
+    levels.forEach(lvl => {
+      const btn = document.createElement('button');
+      btn.className = 'level-btn';
+      const unlocked = data.unlocked_levels.includes(lvl) || lvl === 'a1';
+      const mastered = SRS.isLevelMastered(data.vocabulary, lvl);
+      const pct = SRS.getMasteryPercent(data.vocabulary, lvl);
+      if (!unlocked) btn.classList.add('locked');
+      if (mastered) btn.classList.add('mastered');
+      if (lvl === data.current_level) btn.classList.add('active');
+      btn.innerHTML = `${labels[lvl]}<br><small style="font-weight:400;font-size:0.7rem">${pct}%</small>`;
+      if (unlocked) {
+        btn.addEventListener('click', () => {
+          data.current_level = lvl;
+          Storage.set('current_level', lvl);
+          data = Storage.getAll();
+          renderLevels();
+        });
+      }
+      grid.appendChild(btn);
+    });
+  }
+
+  function renderDueBanner() {
+    const level = data.current_level || 'a1';
+    const due = SRS.getDueItems(data.vocabulary, level);
+    const banner = document.getElementById('due-banner');
+    if (due.length > 0) {
+      document.getElementById('due-text').textContent = `📚 ${due.length} Vokabel${due.length !== 1 ? 'n' : ''} zur Wiederholung fällig`;
+      banner.classList.remove('hidden');
+    }
+  }
+
+  // API Key save
+  document.getElementById('save-key-btn').addEventListener('click', async () => {
+    const key = document.getElementById('api-key-input').value.trim();
+    if (!key) return;
+    const btn = document.getElementById('save-key-btn');
+    const spinner = document.getElementById('key-spinner');
+    const btnText = document.getElementById('key-btn-text');
+    const errBox = document.getElementById('key-error');
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Wird geprüft…';
+    errBox.classList.add('hidden');
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: 'Antworte nur mit: OK' }] }] })
+      });
+      if (!res.ok) throw new Error('Ungültiger API-Key oder Netzwerkfehler');
+      data.gemini_api_key = key;
+      if (!data.unlocked_levels.includes('a1')) data.unlocked_levels.push('a1');
+      Storage.saveAll(data);
+      showHome();
+    } catch(e) {
+      errBox.textContent = `Fehler: ${e.message}`;
+      errBox.classList.remove('hidden');
+    } finally {
+      btn.disabled = false;
+      spinner.classList.add('hidden');
+      btnText.textContent = 'Key speichern &amp; testen';
+    }
+  });
+
+  // Reset
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (confirm('Was möchtest du tun?\nOK = Alles zurücksetzen\nAbbrechen = Nur Key ändern')) {
+      Storage.clear();
+    } else {
+      Storage.set('gemini_api_key', '');
+    }
+    location.reload();
+  });
+
+  init();
+</script>
+</body>
+</html>
