@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satz-Training — Franz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="nav-back">← Zurück</a>
+  <h1>Satz-Training</h1>
+
+  <div id="loading" class="card">Lädt…</div>
+
+  <div id="training-area" class="hidden">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <span id="sent-counter" style="font-size:0.85rem;color:#6b7280"></span>
+      <span id="level-badge" class="badge badge-blue"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="card">
+      <p style="font-size:0.85rem;color:#6b7280;margin-bottom:8px">Deutsche Bedeutung:</p>
+      <p id="german-sent" style="font-weight:600;font-size:1.05rem;margin-bottom:20px"></p>
+      <p style="font-size:0.85rem;color:#6b7280;margin-bottom:8px">Sprich den französischen Satz:</p>
+      <div style="display:flex;gap:10px;margin-bottom:8px">
+        <button id="play-btn" class="btn btn-secondary" style="width:auto;flex:0 0 auto;padding:12px 16px">🔊</button>
+        <button id="show-btn" class="btn btn-secondary" style="flex:1">Satz anzeigen</button>
+      </div>
+      <p id="french-sent" style="font-style:italic;color:#6b7280;min-height:24px;margin-bottom:16px"></p>
+      <button class="mic-btn" id="mic-btn">🎤</button>
+      <p id="mic-status" style="font-size:0.85rem;color:#6b7280;text-align:center;min-height:20px"></p>
+    </div>
+
+    <div id="feedback-area" class="hidden">
+      <div id="feedback-box" class="feedback-box"></div>
+      <button id="next-btn" class="btn btn-primary" style="margin-top:12px">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/stt.js"></script>
+<script src="js/gemini.js"></script>
+<script>
+  let sentences = [];
+  let currentIdx = 0;
+  const storageData = Storage.getAll();
+  const level = storageData.current_level || 'a1';
+  const apiKey = storageData.gemini_api_key;
+
+  async function init() {
+    const res = await fetch(`content/${level}.json`);
+    const data = await res.json();
+    sentences = [...data.sentences].sort(() => Math.random() - 0.5);
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('training-area').classList.remove('hidden');
+    document.getElementById('level-badge').textContent = level.toUpperCase();
+    showSentence();
+  }
+
+  function showSentence() {
+    if (currentIdx >= sentences.length) { showDone(); return; }
+    const s = sentences[currentIdx];
+    document.getElementById('german-sent').textContent = s.german;
+    document.getElementById('french-sent').textContent = '';
+    document.getElementById('mic-status').textContent = '';
+    document.getElementById('feedback-area').classList.add('hidden');
+    const pct = Math.round(currentIdx / sentences.length * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('sent-counter').textContent = `${currentIdx + 1} / ${sentences.length}`;
+  }
+
+  document.getElementById('play-btn').addEventListener('click', () => {
+    TTS.speak(sentences[currentIdx].french, 'fr-FR');
+  });
+
+  document.getElementById('show-btn').addEventListener('click', () => {
+    document.getElementById('french-sent').textContent = sentences[currentIdx].french;
+  });
+
+  // IMPORTANT: STT must start synchronously inside this click handler (iOS requirement)
+  document.getElementById('mic-btn').addEventListener('click', function() {
+    const micBtn = this;
+    micBtn.classList.add('listening');
+    document.getElementById('mic-status').textContent = 'Höre zu…';
+    STT.listen(
+      async (transcript) => {
+        micBtn.classList.remove('listening');
+        document.getElementById('mic-status').textContent = `Erkannt: "${transcript}"`;
+        await getFeedback(transcript);
+      },
+      (err) => {
+        micBtn.classList.remove('listening');
+        document.getElementById('mic-status').textContent = err;
+      }
+    );
+  });
+
+  async function getFeedback(transcript) {
+    const sent = sentences[currentIdx].french;
+    const feedbackBox = document.getElementById('feedback-box');
+    const feedbackArea = document.getElementById('feedback-area');
+    feedbackBox.className = 'feedback-box feedback-info';
+    feedbackBox.innerHTML = '<span class="spinner"></span> Feedback wird geladen…';
+    feedbackArea.classList.remove('hidden');
+    try {
+      const text = await Gemini.sentenceFeedback(sent, transcript, apiKey);
+      feedbackBox.className = 'feedback-box feedback-info';
+      feedbackBox.textContent = text;
+    } catch(e) {
+      feedbackBox.className = 'feedback-box feedback-wrong';
+      feedbackBox.textContent = `Fehler: ${e.message}`;
+    }
+  }
+
+  document.getElementById('next-btn').addEventListener('click', () => {
+    currentIdx++;
+    showSentence();
+  });
+
+  function showDone() {
+    document.getElementById('training-area').innerHTML = `
+      <div class="card" style="text-align:center">
+        <h2>Alle Sätze geübt! 🎉</h2>
+        <a href="index.html" class="btn btn-primary" style="margin-top:16px">Zurück zum Menü</a>
+        <button onclick="location.reload()" class="btn btn-secondary">Nochmal</button>
+      </div>`;
+  }
+
+  init();
+</script>
+</body>
+</html>
