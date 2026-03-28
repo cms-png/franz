@@ -1,6 +1,6 @@
 // js/gemini.js — verwendet Groq API (kostenlos, EU-kompatibel)
 const Gemini = {
-  _model: 'llama-3.3-70b-versatile',
+  _model: 'llama-3.1-8b-instant',
   _baseUrl: 'https://api.groq.com/openai/v1/chat/completions',
 
   async _call(prompt, apiKey) {
