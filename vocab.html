@@ -109,7 +109,6 @@
     const pct = Math.round(currentIdx / sessionTotal * 100);
     document.getElementById('progress-fill').style.width = pct + '%';
     document.getElementById('queue-info').textContent = `${currentIdx + 1} / ${sessionTotal}`;
-    TTS.speak(item.word, 'fr-FR');
   }
 
   document.getElementById('play-btn').addEventListener('click', () => {
