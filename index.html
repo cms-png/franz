@@ -147,7 +147,10 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: 'Antworte nur mit: OK' }] }] })
       });
-      if (!res.ok) throw new Error('Ungültiger API-Key oder Netzwerkfehler');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(`Fehler ${res.status}: ${errData?.error?.message || 'Unbekannter Fehler'}`);
+      }
       data.gemini_api_key = key;
       if (!data.unlocked_levels.includes('a1')) data.unlocked_levels.push('a1');
       Storage.saveAll(data);
