@@ -2,18 +2,36 @@
 const TTS = {
   speak(text, lang = 'fr-FR', rate = 0.85) {
     return new Promise((resolve) => {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang;
-      u.rate = rate;
-      u.onend = resolve;
-      u.onerror = resolve; // resolve even on error to avoid hanging
-      speechSynthesis.speak(u);
-    });
-  },
+      const doSpeak = () => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        u.rate = rate;
+        u.onend = resolve;
+        u.onerror = resolve;
 
-  // Get available French voices (for debugging)
-  getFrenchVoices() {
-    return speechSynthesis.getVoices().filter(v => v.lang.startsWith('fr'));
+        // Try to find a matching voice
+        const voices = speechSynthesis.getVoices();
+        const match = voices.find(v => v.lang.startsWith('fr'));
+        if (match) u.voice = match;
+
+        speechSynthesis.speak(u);
+      };
+
+      // Voices may not be loaded yet on first call
+      const voices = speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        doSpeak();
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          speechSynthesis.onvoiceschanged = null;
+          doSpeak();
+        };
+        // Fallback: try anyway after short delay (iOS sometimes doesn't fire onvoiceschanged)
+        setTimeout(() => {
+          if (speechSynthesis.pending || speechSynthesis.speaking) return;
+          doSpeak();
+        }, 500);
+      }
+    });
   }
 };
