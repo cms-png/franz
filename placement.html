@@ -64,13 +64,20 @@
     document.getElementById('question-feedback').classList.add('hidden');
     document.getElementById('next-btn').classList.add('hidden');
 
+    // Shuffle options while keeping track of correct answer
+    const shuffled = q.options
+      .map((opt, i) => ({ opt, i }))
+      .sort(() => Math.random() - 0.5);
+    const newCorrect = shuffled.findIndex(x => x.i === q.correct);
+    const shuffledQ = { ...q, options: shuffled.map(x => x.opt), correct: newCorrect };
+
     const area = document.getElementById('options-area');
     area.innerHTML = '';
-    q.options.forEach((opt, i) => {
+    shuffledQ.options.forEach((opt, i) => {
       const btn = document.createElement('button');
       btn.className = 'choice-option';
       btn.textContent = opt;
-      btn.addEventListener('click', () => selectAnswer(i, q, btn));
+      btn.addEventListener('click', () => selectAnswer(i, shuffledQ, btn));
       area.appendChild(btn);
     });
   }
