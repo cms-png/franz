@@ -1,16 +1,20 @@
-// js/gemini.js
+// js/gemini.js — verwendet Groq API (kostenlos, EU-kompatibel)
 const Gemini = {
-  _model: 'gemini-2.0-flash-lite',
-  _baseUrl: 'https://generativelanguage.googleapis.com/v1beta/models',
+  _model: 'llama-3.3-70b-versatile',
+  _baseUrl: 'https://api.groq.com/openai/v1/chat/completions',
 
   async _call(prompt, apiKey) {
-    const url = `${this._baseUrl}/${this._model}:generateContent?key=${apiKey}`;
-    const res = await fetch(url, {
+    const res = await fetch(this._baseUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.3, maxOutputTokens: 250 }
+        model: this._model,
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.3,
+        max_tokens: 250
       })
     });
     if (!res.ok) {
@@ -18,7 +22,7 @@ const Gemini = {
       throw new Error(err?.error?.message || `API Fehler ${res.status}`);
     }
     const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    return data.choices?.[0]?.message?.content || '';
   },
 
   async testKey(apiKey) {

@@ -18,8 +18,8 @@
     <p style="margin-bottom:24px">Dein persönlicher Französisch-Trainer. Bitte gib deinen Gemini API-Key ein um zu starten.</p>
     <div class="card">
       <h2>API-Key einrichten</h2>
-      <p style="margin-bottom:16px; font-size:0.9rem;">Du bekommst deinen kostenlosen Key auf <strong>aistudio.google.com</strong> → "Get API key".</p>
-      <input type="password" id="api-key-input" class="input" placeholder="AIzaSy..." style="margin-bottom:12px">
+      <p style="margin-bottom:16px; font-size:0.9rem;">Du bekommst deinen kostenlosen Key auf <strong>console.groq.com</strong> → Anmelden → "API Keys" → "Create API Key".</p>
+      <input type="password" id="api-key-input" class="input" placeholder="gsk_..." style="margin-bottom:12px">
       <div id="key-error" class="feedback-box feedback-wrong hidden"></div>
       <button id="save-key-btn" class="btn btn-primary">
         <span id="key-btn-text">Key speichern &amp; testen</span>
@@ -141,11 +141,10 @@
     btnText.textContent = 'Wird geprüft…';
     errBox.classList.add('hidden');
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`;
-      const res = await fetch(url, {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: 'Antworte nur mit: OK' }] }] })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+        body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: 'Antworte nur mit: OK' }], max_tokens: 5 })
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
